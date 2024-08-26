@@ -1,14 +1,16 @@
 package com.registration.registration.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.registration.registration.model.User;
 import com.registration.registration.service.AuthenticationResponse;
 import com.registration.registration.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 public class AuthenticationController {
@@ -36,5 +38,11 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody User user) {
         return ResponseEntity.ok(authenticationService.login(user));
+    }
+
+
+    @GetMapping("/")
+    public String test(@RequestBody User user) {
+        return "cc le server fonctionne";
     }
 }
