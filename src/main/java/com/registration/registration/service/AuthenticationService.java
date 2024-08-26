@@ -1,12 +1,13 @@
 package com.registration.registration.service;
 
-import com.registration.registration.model.User;
-import com.registration.registration.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.registration.registration.model.User;
+import com.registration.registration.repository.UserRepository;
 
 @Service
 public class AuthenticationService {
@@ -75,7 +76,7 @@ public class AuthenticationService {
         String token = jwtService.generateToken(user);
 
         return new AuthenticationResponse(token);
-
-
     }
+
+    //public AuthenticationResponse (User authUser)
 }
