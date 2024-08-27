@@ -1,5 +1,6 @@
 package com.registration.registration.config;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import com.registration.registration.service.UserDetailsServiceImp;
 
 @Configuration
 @EnableWebSecurity
+@SecurityRequirement(name = "bearerAuth")
 public class SecurityConfig {
 
     private UserDetailsServiceImp userDetailsServiceImp;
@@ -44,8 +46,21 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Le CSRF est désactivé ici pour permettre une configuration plus simple dans cet exemple
                 .authorizeHttpRequests(
                         req -> req
-                                .requestMatchers("/login/**", "/register/**").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers(
+                                        "/login/**",
+                                        "/register/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui.html",
+                                        "/webjars/**"
+                                        )
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .userDetailsService(userDetailsServiceImp)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
