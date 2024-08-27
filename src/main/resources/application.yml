@@ -1,9 +1,9 @@
 spring:
     application:
-        name: registration
+        name: candidature
 
     datasource:
-        url: jdbc:postgresql://localhost:5432/registration
+        url: jdbc:postgresql://localhost:5432/candidature
         username: postgres
         password: qqqq
     
@@ -16,6 +16,9 @@ spring:
             hibernate:
                 format_sql: true
         database: postgresql
+
+server:
+    port: 8090
 
 
 

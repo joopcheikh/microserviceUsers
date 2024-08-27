@@ -1,6 +1,7 @@
 package com.registration.registration.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -29,11 +30,19 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String username;
+
     private String firstname;
 
-    private String lastname;
+    private String adress;
 
-    private String username;
+    private Date birthdate;
+
+    private String birthplace;
+
+    private String cnicardnumber;
+
+    private String filePath;
 
     private String password;
 
