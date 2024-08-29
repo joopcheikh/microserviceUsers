@@ -36,7 +36,7 @@ public class AuthenticationService {
     }
 
     // Methode pour les candidatures
-    public String candidature(String username, String firstname, String address, Date birthdate, String birthplace, String cnicardnumber, String filePath) throws IOException {
+    public String candidature(String username, String firstname, String telephone, String sexe, String address, Date birthdate, String birthplace, String cnicardnumber, String filePath) throws IOException {
         // Vérifiez que le fichier est un PDF
         Path file = Paths.get(filePath);
         if (!Files.exists(file) || !Files.probeContentType(file).equals("application/pdf")) {
@@ -53,6 +53,8 @@ public class AuthenticationService {
         User user = new User();
         user.setUsername(username);
         user.setFirstname(firstname);
+        user.setTelephone(telephone);
+        user.setSexe(sexe);
         user.setAdress(address);
         user.setBirthdate(birthdate);
         user.setBirthplace(birthplace);

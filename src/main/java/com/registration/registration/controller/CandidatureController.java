@@ -27,6 +27,8 @@ public class CandidatureController {
     public ResponseEntity<String> candidature(
             @RequestParam("username") String username,
             @RequestParam("firstname") String firstname,
+            @RequestParam("telephone") String telephone,
+            @RequestParam("sexe") String sexe,
             @RequestParam("address") String address, // Correction du mot "adress" en "address"
             @RequestParam("birthdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate, // Assurez-vous d'importer @DateTimeFormat
             @RequestParam("birthplace") String birthplace,
@@ -62,7 +64,7 @@ public class CandidatureController {
     
             // Passez le chemin du fichier au service
             String filePath = path.toString();
-            String response = authenticationService.candidature(username, firstname, address, birthdate, birthplace, cnicardnumber, filePath);
+            String response = authenticationService.candidature(username, firstname,telephone, sexe, address, birthdate, birthplace, cnicardnumber, filePath);
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Erreur lors du traitement de la candidature.");
