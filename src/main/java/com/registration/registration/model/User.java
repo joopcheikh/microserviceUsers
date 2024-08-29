@@ -34,6 +34,10 @@ public class User implements UserDetails {
 
     private String firstname;
 
+    private String telephone;
+
+    private String sexe;
+
     private String adress;
 
     private Date birthdate;
