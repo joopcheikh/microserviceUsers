@@ -3,7 +3,7 @@ spring:
         name: candidature
 
     datasource:
-        url: jdbc:postgresql://localhost:5432/candidature
+        url: jdbc:postgresql://localhost:5432/registration
         username: postgres
         password: qqqq
     
