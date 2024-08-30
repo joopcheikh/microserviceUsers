@@ -1,10 +1,10 @@
-package com.registration.registration;
+package com.email.email;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RegistrationApplicationTests {
+class EmailApplicationTests {
 
 	@Test
 	void contextLoads() {

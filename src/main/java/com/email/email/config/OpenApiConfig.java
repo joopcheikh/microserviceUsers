@@ -1,4 +1,4 @@
-package com.registration.registration.config;
+package com.email.email.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
