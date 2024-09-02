@@ -3,18 +3,17 @@ package com.getusers.getusers.filter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class CorsFilter extends OncePerRequestFilter {
+public class CustomCorsFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@SuppressWarnings("null") final HttpServletRequest request, @SuppressWarnings("null") final HttpServletResponse response,
-                                    @SuppressWarnings("null") final FilterChain filterChain) throws ServletException, IOException {
+                                    @SuppressWarnings({ "null" }) final FilterChain filterChain) throws ServletException, java.io.IOException {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, HEAD");
         response.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");

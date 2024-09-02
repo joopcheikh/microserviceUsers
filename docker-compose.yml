@@ -17,9 +17,9 @@ services:
     image: openjdk:17-alpine
     container_name: spring_app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/registration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/registration
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: qqqq
+      SPRING_DATASOURCE_PASSWORD: aaaa
     ports:
       - "8080:8080"
     depends_on:
