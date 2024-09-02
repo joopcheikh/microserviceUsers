@@ -1,4 +1,5 @@
-package com.email.email.config;
+package com.getusers.getusers.config;
+
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
