@@ -1,4 +1,4 @@
-package com.getusers.getusers.security;
+package com.getusers.getusers.config;
 
 public class WebSecurityConfigurerAdapter {
 
