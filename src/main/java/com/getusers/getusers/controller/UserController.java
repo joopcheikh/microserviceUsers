@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.getusers.getusers.dto.UserDTO;
+//import com.getusers.getusers.model.User;
 import com.getusers.getusers.service.UserService;
 
 @RestController
