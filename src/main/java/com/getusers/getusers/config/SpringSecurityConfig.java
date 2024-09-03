@@ -26,6 +26,7 @@ public class SpringSecurityConfig {
 
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
