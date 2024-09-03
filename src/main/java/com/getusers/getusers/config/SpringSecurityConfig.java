@@ -21,8 +21,8 @@ public class SpringSecurityConfig {
     @Autowired
     public void configureAMBuilder (AuthenticationManagerBuilder auth) throws Exception{
         auth.jdbcAuthentication().dataSource(ds)
-        .authoritiesByUsernameQuery("select username, role from users where username=?")
-        .usersByUsernameQuery("select username, password, 1 from users where username=?");
+        .authoritiesByUsernameQuery("select email, role from users where email=?")
+        .usersByUsernameQuery("select email, password, 1 from users where email=?");
 
     }
 
