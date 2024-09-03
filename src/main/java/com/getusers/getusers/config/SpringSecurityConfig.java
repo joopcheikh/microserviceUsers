@@ -1,25 +1,29 @@
 package com.getusers.getusers.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import javax.sql.DataSource;
 
+@EnableMethodSecurity 
 @Configuration
 public class SpringSecurityConfig {
 
-    @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        UserDetails user = User.withUsername("stan")
-                .password(passwordEncoder().encode("stan"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
+    @Autowired
+    private DataSource ds;
+
+    @Autowired
+    public void configureAMBuilder (AuthenticationManagerBuilder auth) throws Exception{
+        auth.jdbcAuthentication().dataSource(ds)
+        .authoritiesByUsernameQuery("select username, role from users where username=?")
+        .usersByUsernameQuery("select username, password, 1 from users where username=?");
+
     }
 
     @Bean
@@ -27,8 +31,7 @@ public class SpringSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/users").authenticated()
-                )
+                        .anyRequest().hasAuthority("ADMIN"))
                 .httpBasic(basic -> basic.realmName("My Realm"));
         return http.build();
     }
