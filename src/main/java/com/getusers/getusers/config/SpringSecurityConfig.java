@@ -49,7 +49,7 @@ public class SpringSecurityConfig {
         http.cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().hasAuthority("ADMIN"))
+                        .anyRequest().hasAnyAuthority("ADMIN","RECRUITER"))
                 .httpBasic(basic -> basic.realmName("My Realm"));
         return http.build();
     }
