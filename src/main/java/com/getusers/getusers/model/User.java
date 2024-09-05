@@ -81,7 +81,7 @@ public class User {
         this.firstname = firstname;
     }
 
-    public void setLastName(String lastName){
-        this.lastname = lastName;
+    public void setLastName(String lastname){
+        this.lastname = lastname;
     }
 }

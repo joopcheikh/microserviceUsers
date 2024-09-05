@@ -13,6 +13,8 @@ public class UserDTO {
         this.email = email;
         this.name = name;
         this.role = role;
+        this.firstname = firstname;
+        this.lastname = lastname;
     }
 
     public Long getId() {
