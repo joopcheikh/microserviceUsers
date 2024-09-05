@@ -5,8 +5,10 @@ public class UserDTO {
     private String email;
     private String name;
     private String role;
+    private String lastname;
+    private String firstname;
 
-    public UserDTO(Long id, String email, String name, String role) {
+    public UserDTO(Long id, String email, String name, String role, String lastname, String firstname) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -17,7 +19,7 @@ public class UserDTO {
         return id;
     }
 
-    public String getRole(){
+    public String getRole() {
         return role;
     }
 
@@ -27,5 +29,13 @@ public class UserDTO {
 
     public String getName() {
         return name;
+    }
+
+    public String getFirstName() {
+        return firstname;
+    }
+
+    public String getLastName() {
+        return lastname;
     }
 }
