@@ -1,24 +1,29 @@
 package com.getusers.getusers.dto;
 
+
 public class UserDTO {
-    private Long id;
+    private Integer id;
     private String email;
-    private String name;
     private String role;
     private String lastname;
     private String firstname;
+    private String type_candidat;
 
-    public UserDTO(Long id, String email, String name, String role, String lastname, String firstname) {
-        this.id = id;
+    public UserDTO(Integer integer, String email, String string, String lastname, String firstname, String type_candidat) {
+        this.id = integer;
         this.email = email;
-        this.name = name;
-        this.role = role;
+        this.role = string;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.type_candidat = type_candidat;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public String getType_candidat() {
+        return type_candidat;
     }
 
     public String getRole() {
@@ -29,9 +34,6 @@ public class UserDTO {
         return email;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public String getFirstName() {
         return firstname;

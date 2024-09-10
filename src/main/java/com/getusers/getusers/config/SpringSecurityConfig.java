@@ -7,11 +7,17 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.getusers.getusers.filter.JwtAuthenticationFilter;
+import com.getusers.getusers.service.UserDetailsServiceImp;
 
 import javax.sql.DataSource;
 
@@ -19,39 +25,47 @@ import javax.sql.DataSource;
 @Configuration
 public class SpringSecurityConfig {
 
-    @Configuration
-    public class WebMvcConfig implements WebMvcConfigurer {
-        @Override
-        public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/**")
-                    .allowedOrigins(
-                            "http://localhost:5173",
-                            "http://localhost:8080")
-                    .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                    .allowedHeaders("*")
-                    .allowCredentials(true);
-        }
-    }
+     private UserDetailsServiceImp userDetailsServiceImp;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    private DataSource ds;
-
-    @Autowired
-    public void configureAMBuilder(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(ds)
-                .authoritiesByUsernameQuery("select email, role from users where email=?")
-                .usersByUsernameQuery("select email, password, 1 from users where email=?");
-
+    public SpringSecurityConfig(
+            UserDetailsServiceImp userDetailsServiceImp,
+            JwtAuthenticationFilter jwtAuthenticationFilter
+    ) {
+        this.userDetailsServiceImp = userDetailsServiceImp;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().hasAnyAuthority("ADMIN","RECRUITER"))
-                .httpBasic(basic -> basic.realmName("My Realm"));
-        return http.build();
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                // allow all origins to access our service
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
+                        .allowedHeaders("*");
+            }
+        };
+    }
+ 
+
+      @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        req -> req
+                                .anyRequest()
+                                .hasAuthority("ADMIN")
+                )
+                .userDetailsService(userDetailsServiceImp)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(Customizer.withDefaults())
+                .build();
     }
 
     @Bean

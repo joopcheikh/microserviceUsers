@@ -12,22 +12,48 @@ import com.getusers.getusers.repository.UserRepository;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll().stream()
                 .collect(Collectors.toList());
         return users.stream()
-                .map(user -> new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole(),
-                        user.getLastName(), user.getFirstName()))
+                .map(user -> new UserDTO(user.getId(), user.getEmail(), user.getRole(),
+                        user.getFirstname(), user.getLastname(),user.getType_candidat()))
                 .collect(Collectors.toList());
     }
 
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findUserByEmail(email);
+    }
+
+    public User getUserById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
+    public User addUser(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        return userRepository.save(user);
+    }
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
+    
+
+    public User updateUser(User user) {
+        System.out.println(user);
+        return userRepository.save(user);
+    }
+
+    public String deleteUser(User user) {
+        return null;
     }
 }
