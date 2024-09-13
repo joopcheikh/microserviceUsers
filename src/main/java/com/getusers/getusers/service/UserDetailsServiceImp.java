@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import com.getusers.getusers.model.User;
 import com.getusers.getusers.repository.UserRepository;
 
+
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
 
     private final UserRepository userRepository;
-
     public UserDetailsServiceImp(UserRepository repository) {
         this.userRepository = repository;
     }
@@ -43,17 +43,14 @@ public class UserDetailsServiceImp implements UserDetailsService {
     }
 
     public User addUser(User user) {
-
         return userRepository.save(user);
     }
 
     public User updateUser(User user) {
-
         return userRepository.save(user);
     }
 
     public String deleteUser(User user) {
-
         userRepository.delete(user);
         return "utilisateur supprime avec succes ";
     }

@@ -10,6 +10,8 @@ import com.getusers.getusers.dto.UserDTO;
 import com.getusers.getusers.model.User;
 import com.getusers.getusers.repository.UserRepository;
 
+
+
 @Service
 public class UserService {
 
@@ -26,7 +28,7 @@ public class UserService {
                 .collect(Collectors.toList());
         return users.stream()
                 .map(user -> new UserDTO(user.getId(), user.getEmail(), user.getRole(),
-                        user.getFirstname(), user.getLastname(),user.getType_candidat()))
+                        user.getFirstname(), user.getLastname(), user.getType_candidat()))
                 .collect(Collectors.toList());
     }
 
@@ -39,17 +41,20 @@ public class UserService {
     }
 
     public User addUser(User user) {
+        User existingUser = userRepository.findUserByEmail(user.getEmail());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("duplicate");
+        }
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         return userRepository.save(user);
     }
+
     public void deleteUserById(Integer userId) {
         userRepository.deleteById(userId);
     }
-    
 
     public User updateUser(User user) {
-        System.out.println(user);
         return userRepository.save(user);
     }
 

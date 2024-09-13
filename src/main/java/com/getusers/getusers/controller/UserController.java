@@ -54,10 +54,13 @@ public class UserController {
     }
 
     @PostMapping("/add/user")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-
-        User createdUser = userService.addUser(user);
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            User createdUser = userService.addUser(user);
+            return ResponseEntity.ok(createdUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/update/user/{userId}")
@@ -73,7 +76,7 @@ public class UserController {
         existingUser.setEmail(user.getEmail());
         existingUser.setType_candidat(user.getType_candidat());
         existingUser.setRole(user.getRole());
-     
+
         User updatedUser = userService.updateUser(existingUser);
         return ResponseEntity.ok(updatedUser);
     }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,20 +19,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.getusers.getusers.filter.JwtAuthenticationFilter;
 import com.getusers.getusers.service.UserDetailsServiceImp;
 
-import javax.sql.DataSource;
 
 @EnableMethodSecurity
 @Configuration
 public class SpringSecurityConfig {
 
-     private UserDetailsServiceImp userDetailsServiceImp;
+    private UserDetailsServiceImp userDetailsServiceImp;
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
     public SpringSecurityConfig(
             UserDetailsServiceImp userDetailsServiceImp,
-            JwtAuthenticationFilter jwtAuthenticationFilter
-    ) {
+            JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -50,17 +48,16 @@ public class SpringSecurityConfig {
             }
         };
     }
- 
 
-      @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         req -> req
                                 .anyRequest()
-                                .hasAuthority("ADMIN")
-                )
+                                .hasAuthority("ADMIN"))
                 .userDetailsService(userDetailsServiceImp)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
