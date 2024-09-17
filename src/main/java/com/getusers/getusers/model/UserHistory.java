@@ -24,7 +24,7 @@ public class UserHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    private Integer userId; // Id du user
     private String actionType; // ADD, UPDATE, DELETE
     private String email;
     private Role role;
