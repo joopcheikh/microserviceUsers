@@ -1,18 +1,19 @@
 package com.getusers.getusers.dto;
 
+import com.getusers.getusers.model.Role;
 
 public class UserDTO {
     private Integer id;
     private String email;
-    private String role;
+    private Role role;
     private String lastname;
     private String firstname;
     private String type_candidat;
 
-    public UserDTO(Integer integer, String email, String string, String lastname, String firstname, String type_candidat) {
-        this.id = integer;
+    public UserDTO(Integer id, String email, Role role, String lastname, String firstname, String type_candidat) {
+        this.id = id;
         this.email = email;
-        this.role = string;
+        this.role = role;
         this.firstname = firstname;
         this.lastname = lastname;
         this.type_candidat = type_candidat;
@@ -25,10 +26,10 @@ public class UserDTO {
     public String getType_candidat() {
         return type_candidat;
     }
-
+    /* 
     public String getRole() {
         return role;
-    }
+    } */
 
     public String getEmail() {
         return email;

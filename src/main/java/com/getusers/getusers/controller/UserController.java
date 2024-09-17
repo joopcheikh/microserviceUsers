@@ -1,41 +1,35 @@
 package com.getusers.getusers.controller;
 
-import java.util.List;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.getusers.getusers.dto.UserDTO;
 import com.getusers.getusers.model.User;
 import com.getusers.getusers.service.UserService;
-
-import org.springframework.web.bind.annotation.RequestBody;
+import com.getusers.getusers.service.UserHistoryService;
 
 @RestController
-
 public class UserController {
+
     private final UserService userService;
+    private final UserHistoryService userHistoryService; // Injection du service d'historique
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserHistoryService userHistoryService) {
         this.userService = userService;
-
+        this.userHistoryService = userHistoryService;
     }
 
     @GetMapping("/users")
     public Map<String, Object> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userRole = authentication.getAuthorities().iterator().next().getAuthority();
-        System.out.println(userRole);
         Map<String, Object> response = new HashMap<>();
 
         if ("ADMIN".equals(userRole)) {
@@ -57,6 +51,12 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             User createdUser = userService.addUser(user);
+
+            // Enregistrer l'action dans l'historique
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String adminName = authentication.getName();
+            userHistoryService.saveHistory("ADD", createdUser, null, adminName);
+
             return ResponseEntity.ok(createdUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -78,6 +78,12 @@ public class UserController {
         existingUser.setRole(user.getRole());
 
         User updatedUser = userService.updateUser(existingUser);
+
+        // Enregistrer l'action dans l'historique
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String adminName = authentication.getName();
+        userHistoryService.saveHistory("UPDATE", updatedUser, existingUser, adminName);
+
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -89,7 +95,12 @@ public class UserController {
         }
 
         userService.deleteUserById(userId);
+
+        // Enregistrer l'action dans l'historique
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String adminName = authentication.getName();
+        userHistoryService.saveHistory("DELETE", existingUser, null, adminName);
+
         return ResponseEntity.noContent().build();
     }
-
 }

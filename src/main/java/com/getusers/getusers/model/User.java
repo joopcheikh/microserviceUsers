@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +33,9 @@ public class User implements UserDetails {
 
     private String password;
     private String type_candidat;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
    
 
     @Override
