@@ -26,10 +26,10 @@ public class UserDTO {
     public String getType_candidat() {
         return type_candidat;
     }
-    /* 
-    public String getRole() {
+     
+    public Role getRole() {
         return role;
-    } */
+    } 
 
     public String getEmail() {
         return email;
