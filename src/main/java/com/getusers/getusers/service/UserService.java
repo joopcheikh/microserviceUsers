@@ -2,11 +2,13 @@ package com.getusers.getusers.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.getusers.getusers.dto.UserDTO;
 import com.getusers.getusers.model.User;
 import com.getusers.getusers.repository.UserRepository;
