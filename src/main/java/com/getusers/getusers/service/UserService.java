@@ -2,12 +2,11 @@ package com.getusers.getusers.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.getusers.getusers.dto.UserDTO;
 import com.getusers.getusers.model.User;
 import com.getusers.getusers.repository.UserRepository;
@@ -17,7 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserHistoryService userHistoryService; // Injection du service d'historique
+    private final UserHistoryService userHistoryService;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserHistoryService userHistoryService) {
         this.userRepository = userRepository;
@@ -25,15 +24,13 @@ public class UserService {
         this.userHistoryService = userHistoryService;
     }
 
-    
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(user -> new UserDTO(user.getId(), user.getEmail(), user.getRole(), // Remplacez user.getRole() par null
+                .map(user -> new UserDTO(user.getId(), user.getEmail(), user.getRole(),
                         user.getFirstname(), user.getLastname(), user.getType_candidat()))
                 .collect(Collectors.toList());
     }
-    
 
     public User getUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
@@ -54,8 +51,9 @@ public class UserService {
 
         // Enregistrer l'action dans l'historique
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String adminName = authentication.getName();  // Admin connecté
-        userHistoryService.saveHistory("ADD", savedUser, null, adminName);
+        String adminName = getAdminName(authentication);
+        String adminEmail = getAdminEmail(authentication);
+        userHistoryService.saveHistory("ADD", savedUser, null, adminName, adminEmail);
 
         return savedUser;
     }
@@ -70,8 +68,9 @@ public class UserService {
 
         // Enregistrer l'action dans l'historique
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String adminName = authentication.getName();
-        userHistoryService.saveHistory("UPDATE", updatedUser, existingUser, adminName);
+        String adminName = getAdminName(authentication);
+        String adminEmail = getAdminEmail(authentication);
+        userHistoryService.saveHistory("UPDATE", updatedUser, existingUser, adminName, adminEmail);
 
         return updatedUser;
     }
@@ -83,8 +82,9 @@ public class UserService {
 
             // Enregistrer l'action dans l'historique
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String adminName = authentication.getName();
-            userHistoryService.saveHistory("DELETE", user, null, adminName);
+            String adminName = getAdminName(authentication);
+            String adminEmail = getAdminEmail(authentication);
+            userHistoryService.saveHistory("DELETE", user, null, adminName, adminEmail);
         }
     }
 
@@ -93,9 +93,28 @@ public class UserService {
 
         // Enregistrer l'action dans l'historique
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String adminName = authentication.getName();
-        userHistoryService.saveHistory("DELETE", user, null, adminName);
+        String adminName = getAdminName(authentication);
+        String adminEmail = getAdminEmail(authentication);
+        userHistoryService.saveHistory("DELETE", user, null, adminName, adminEmail);
 
         return "User deleted successfully";
+    }
+
+    private String getAdminName(Authentication authentication) {
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String email = userDetails.getUsername();
+            User admin = userRepository.findUserByEmail(email);
+            return admin != null ? admin.getFirstname() : "Unknown";
+        }
+        return "Unknown";
+    }
+
+    private String getAdminEmail(Authentication authentication) {
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userDetails.getUsername();
+        }
+        return null;
     }
 }
