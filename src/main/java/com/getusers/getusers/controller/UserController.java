@@ -8,18 +8,26 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.getusers.getusers.dto.UserDTO;
 import com.getusers.getusers.model.User;
-import com.getusers.getusers.service.UserService;
+import com.getusers.getusers.model.UserHistory;
 import com.getusers.getusers.service.UserHistoryService;
+import com.getusers.getusers.service.UserService;
 
 @RestController
 public class UserController {
 
     private final UserService userService;
-    private final UserHistoryService userHistoryService; // Injection du service d'historique
+    private final UserHistoryService userHistoryService;
 
     public UserController(UserService userService, UserHistoryService userHistoryService) {
         this.userService = userService;
@@ -47,6 +55,12 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/get-histories")
+    public ResponseEntity<List<UserHistory>> getHistories() {
+        List<UserHistory> histories = userHistoryService.getAllHistories();
+        return ResponseEntity.ok(histories);
+    }
+
     @PostMapping("/add/user")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
@@ -54,8 +68,9 @@ public class UserController {
 
             // Enregistrer l'action dans l'historique
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String adminName = authentication.getName();
-            userHistoryService.saveHistory("ADD", createdUser, null, adminName);
+            String adminName = getAdminName(authentication);
+            String adminEmail = getAdminEmail(authentication);
+            userHistoryService.saveHistory("ADD", createdUser, null, adminName, adminEmail);
 
             return ResponseEntity.ok(createdUser);
         } catch (IllegalArgumentException e) {
@@ -81,8 +96,9 @@ public class UserController {
 
         // Enregistrer l'action dans l'historique
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String adminName = authentication.getName();
-        userHistoryService.saveHistory("UPDATE", updatedUser, existingUser, adminName);
+        String adminName = getAdminName(authentication);
+        String adminEmail = getAdminEmail(authentication);
+        userHistoryService.saveHistory("UPDATE", updatedUser, existingUser, adminName, adminEmail);
 
         return ResponseEntity.ok(updatedUser);
     }
@@ -98,9 +114,28 @@ public class UserController {
 
         // Enregistrer l'action dans l'historique
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String adminName = authentication.getName();
-        userHistoryService.saveHistory("DELETE", existingUser, null, adminName);
+        String adminName = getAdminName(authentication);
+        String adminEmail = getAdminEmail(authentication);
+        userHistoryService.saveHistory("DELETE", existingUser, null, adminName, adminEmail);
 
         return ResponseEntity.noContent().build();
+    }
+
+    private String getAdminName(Authentication authentication) {
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String email = userDetails.getUsername();
+            User admin = userService.getUserByEmail(email);
+            return admin != null ? admin.getFirstname() : "Unknown";
+        }
+        return "Unknown";
+    }
+
+    private String getAdminEmail(Authentication authentication) {
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userDetails.getUsername();
+        }
+        return null;
     }
 }

@@ -24,15 +24,13 @@ public class UserHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId; // Id du user
     private String actionType; // ADD, UPDATE, DELETE
     private String email;
-    private Role role;
     private String firstname;
     private String lastname;
     private String type_candidat;
-    private Integer adminId;
     private String adminName;
+    private String adminEmail;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp = new Date();
