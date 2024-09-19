@@ -1,11 +1,21 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka/
+    instance:
+        prefer-ip-address: true 
+        hostname: localhost       
+        non-secure-port-enabled: true
+        instance-id: ${spring.application.name}:${server.port}
+
 spring:
     application:
-        name: microserviceUser
+        name: MicroserviceUsers
 
     datasource:
         url: jdbc:postgresql://localhost:5432/registration
         username: postgres
-        password: qqqq
+        password: aaaa
     
     jpa:
         hibernate: 
