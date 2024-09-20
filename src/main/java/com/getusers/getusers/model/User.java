@@ -28,16 +28,17 @@ public class User implements UserDetails {
 
     private String lastname;
 
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
     private String type_candidat;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
    
-
+    private Boolean have_postuled = false;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

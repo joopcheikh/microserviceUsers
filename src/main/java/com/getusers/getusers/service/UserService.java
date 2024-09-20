@@ -3,6 +3,7 @@ package com.getusers.getusers.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,8 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.getusers.getusers.dto.UserDTO;
+import com.getusers.getusers.dto.UserUpdateNameDto;
+import com.getusers.getusers.dto.UserUpdatePasswordDto;
 import com.getusers.getusers.model.User;
 import com.getusers.getusers.repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -20,7 +25,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserHistoryService userHistoryService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserHistoryService userHistoryService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            UserHistoryService userHistoryService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userHistoryService = userHistoryService;
@@ -119,4 +125,33 @@ public class UserService {
         }
         return null;
     }
+
+    public boolean updateUserPassword(String email, UserUpdatePasswordDto userUpdatePasswordDto) {
+        Optional<User> userOptional = Optional.of(userRepository.findUserByEmail(email));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (!passwordEncoder.matches(userUpdatePasswordDto.getOldPassword(), user.getPassword())) {
+                throw new IllegalArgumentException("Ancien mot de passe incorrect");
+            }
+
+            user.setPassword(passwordEncoder.encode(userUpdatePasswordDto.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        } else {
+            throw new EntityNotFoundException("Utilisateur non trouvé");
+        }
+    }
+
+    public User updateUserNameByEmail(String email, UserUpdateNameDto userUpdateNameDto) {
+        Optional<User> userOptional = Optional.of(userRepository.findUserByEmail(email));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setFirstname(userUpdateNameDto.getFirstname());
+            user.setLastname(userUpdateNameDto.getLastname());
+            return userRepository.save(user);
+        } else {
+            throw new EntityNotFoundException("Utilisateur non trouvé avec cet email");
+        }
+    }
+
 }

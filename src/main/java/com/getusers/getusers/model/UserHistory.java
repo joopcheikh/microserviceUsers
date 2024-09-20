@@ -31,6 +31,7 @@ public class UserHistory {
     private String type_candidat;
     private String adminName;
     private String adminEmail;
+    private Role role;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp = new Date();
