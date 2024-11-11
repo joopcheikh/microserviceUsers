@@ -28,7 +28,7 @@ public class UserHistory {
     private String email;
     private String firstname;
     private String lastname;
-    private String type_candidat;
+    private Boolean haspaid;
     private String adminName;
     private String adminEmail;
     private Role role;

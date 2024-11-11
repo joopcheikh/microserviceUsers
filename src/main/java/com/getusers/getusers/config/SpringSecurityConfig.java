@@ -36,7 +36,7 @@ public class SpringSecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                    .requestMatchers("/update/personnal/password", "/update/personnal/name","/update/personnal/email")
+                    .requestMatchers("/api/v1/update/personnal/password", "/api/v1/update/personnal/name","/api/v1/update/personnal/email","/api/v1/get-user-informations")
                     .hasAuthority("USER")
                         .anyRequest()
                     .hasAuthority("ADMIN")

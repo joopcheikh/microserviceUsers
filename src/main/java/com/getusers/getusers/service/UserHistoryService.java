@@ -22,7 +22,7 @@ public class UserHistoryService {
         history.setEmail(user.getEmail());
         history.setFirstname(user.getFirstname());
         history.setLastname(user.getLastname());
-        history.setType_candidat(user.getType_candidat());
+        history.setHaspaid(user.getHaspaid());
         history.setAdminName(adminName);
         history.setAdminEmail(adminEmail);
 

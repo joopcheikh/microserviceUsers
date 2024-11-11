@@ -1,8 +1,7 @@
 package com.getusers.getusers.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,12 +31,22 @@ public class UserService {
         this.userHistoryService = userHistoryService;
     }
 
-    public List<UserDTO> getAllUsers() {
+    public Stream<Object> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(user -> new UserDTO(user.getId(), user.getEmail(), user.getRole(),
-                        user.getFirstname(), user.getLastname(), user.getType_candidat()))
-                .collect(Collectors.toList());
+                .map(user -> new UserDTO(user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getHaspaid(),
+                user.getRole(),
+                user.getGenre(),
+                user.getRegion(),
+                user.getDepartement() ,
+                user.getCommune(),
+                user.getEthnies()
+                ));
     }
 
     public User getUserByEmail(String email) {
