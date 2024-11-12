@@ -1,6 +1,7 @@
 package com.getusers.getusers.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -44,6 +45,8 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     private Boolean haspaid = false;
+
+    private Date creationDate = new Date();
 
     /** Role de l'utilisateur (ex: USER, ADMIN, etc.) */
     @Enumerated(value = EnumType.STRING)

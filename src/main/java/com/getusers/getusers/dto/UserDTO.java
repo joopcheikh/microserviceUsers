@@ -1,5 +1,7 @@
 package com.getusers.getusers.dto;
 
+import java.util.Date;
+
 import com.getusers.getusers.model.Commune;
 import com.getusers.getusers.model.Departement;
 import com.getusers.getusers.model.Genre;
@@ -12,7 +14,7 @@ import lombok.Data;
 public class UserDTO {
     public UserDTO(Integer id2, String firstname2, String lastname2, String email2, String phoneNumber2,
                    Boolean haspaid2, Role role2, Genre genre2, Region region2, Departement departement2, Commune commune2,
-                   String ethnies2) {
+                   String ethnies2, Date creationDate2) {
         this.id = id2;
         this.firstname = firstname2;
         this.lastname = lastname2;
@@ -25,6 +27,7 @@ public class UserDTO {
         this.departement = departement2;
         this.commune = commune2;
         this.ethnies = ethnies2;
+        this.creationDate = creationDate2;
     }
 
     private Integer id;
@@ -39,4 +42,5 @@ public class UserDTO {
     private Departement departement;
     private Commune commune;
     private String ethnies;
+    private Date creationDate;
 }

@@ -45,7 +45,8 @@ public class UserService {
                 user.getRegion(),
                 user.getDepartement() ,
                 user.getCommune(),
-                user.getEthnies()
+                user.getEthnies(),
+                user.getCreationDate()
                 ));
     }
 

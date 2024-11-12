@@ -102,7 +102,8 @@ public class UserController {
                 user.getRegion(), 
                 user.getDepartement() ,
                 user.getCommune(),
-                user.getEthnies()
+                user.getEthnies(),
+                user.getCreationDate()
             );
             return ResponseEntity.ok(userDTO);
         } else {
